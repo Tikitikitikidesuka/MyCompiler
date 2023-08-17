@@ -11,11 +11,13 @@ public:
     virtual bool isDone() = 0;
 };
 
-class DFA : Automata {
+template <class T>
+class DFA : Automata<T> {
 
 };
 
-class NFA : Automata {
+template <class T>
+class NFA : Automata<T> {
 
 };
 
