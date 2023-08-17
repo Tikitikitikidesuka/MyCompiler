@@ -1,4 +1,4 @@
-fibonacci(limit: int32) {
+fn fibonacci(limit: int32): int32 {
     let mut i: int32 = 0; 
     let mut out: int32 = 0;
     let mut a1: int32 = 0;
@@ -11,7 +11,7 @@ fibonacci(limit: int32) {
     return out;
 }
 
-uint8 main() {
+fn main(): int8 {
     let limit: int32 = 5;
     print(fibonacci(limit))
     return 0;
