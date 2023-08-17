@@ -1,5 +1,5 @@
-#ifndef MYCOMPILER_LEXER_H
-#define MYCOMPILER_LEXER_H
+#ifndef LEXER_H
+#define LEXER_H
 
 enum Token {
     tok_eof,
@@ -21,4 +21,4 @@ public:
 };
 
 
-#endif //MYCOMPILER_LEXER_H
+#endif //LEXER_H
