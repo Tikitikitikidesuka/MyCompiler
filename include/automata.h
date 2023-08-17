@@ -2,7 +2,18 @@
 #define AUTOMATA_H
 
 
-class automata {
+// Automata interface
+class Automata {
+public:
+    virtual int step() = 0;
+    virtual int reset() = 0;
+};
+
+class DFA : Automata {
+
+};
+
+class NFA : Automata {
 
 };
 
