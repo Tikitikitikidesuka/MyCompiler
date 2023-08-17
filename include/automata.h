@@ -3,10 +3,12 @@
 
 
 // Automata interface
+template <class T>
 class Automata {
 public:
-    virtual int step() = 0;
-    virtual int reset() = 0;
+    virtual void step(T input) = 0;
+    virtual void reset() = 0;
+    virtual bool isDone() = 0;
 };
 
 class DFA : Automata {
