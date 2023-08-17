@@ -1,3 +1,0 @@
-/home/cesar/Documents/projects/MyCompiler/build/CMakeFiles/MyCompiler.dir
-/home/cesar/Documents/projects/MyCompiler/build/CMakeFiles/edit_cache.dir
-/home/cesar/Documents/projects/MyCompiler/build/CMakeFiles/rebuild_cache.dir
