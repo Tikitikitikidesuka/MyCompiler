@@ -11,6 +11,18 @@ enum Token {
     tok_fn,
     tok_while,
 
+    //separators
+    tok_scolon,
+    tok_colon,
+
+    //parenthesis
+    tok_oparenthesis, 
+    tok_cparenthesis,
+    tok_osquerebr,
+    tok_csquerebr,
+    tok_okey,
+    tok_ckey,
+
     // Other
     tok_identifier,
     tok_number,
