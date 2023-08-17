@@ -1,6 +1,8 @@
 #include <iostream>
 #include "src/Lexer.h"
 
+#include "lexer.h"
+
 int main() {
     Lexer lexer;
     TokenResult token(tok_unknown, "");
