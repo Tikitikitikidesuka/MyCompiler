@@ -1,6 +1,9 @@
 #ifndef MYCOMPILER_LEXER_H
 #define MYCOMPILER_LEXER_H
 
+
+#include <iostream>
+
 enum Token {
     tok_eof,
 
@@ -15,9 +18,20 @@ enum Token {
     tok_unknown,
 };
 
-class Lexer {
+class TokenResult {
 public:
-    Token getToken();
+    Token token;
+    std::string text;
+
+    TokenResult(Token token, std::string text)
+    : token(token), text(text) {};
+};
+
+class Lexer {
+private:
+    char state;
+public:
+    TokenResult getToken();
 };
 
 

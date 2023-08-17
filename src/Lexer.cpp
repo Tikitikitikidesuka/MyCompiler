@@ -2,15 +2,23 @@
 
 #include <regex>
 #include <iostream>
+#include <vector>
 
-Token Lexer::getToken() {
-    std::string input;
-    if (!(std::cin >> input)) return Token::tok_eof;
+TokenResult Lexer::getToken() {
+    std::string input_str = "";
+    char input = state;
+    
+    if (!(std::cin >> input)) return TokenResult(Token::tok_eof, input_str);
+    while (isalnum(input)) {
+        input_str += input;
+        std::cin >> input;
+    } 
+    this->state = input;
 
-    if (std::regex_match(input, std::regex("fn"))) return Token::tok_fn;
-    if (std::regex_match(input, std::regex("while"))) return Token::tok_while;
-    if (std::regex_match(input, std::regex("[a-zA-Z][a-zA-Z0-9]*"))) return Token::tok_identifier;
-    if (std::regex_match(input, std::regex("[0-9]+"))) return Token::tok_number;
+    if (std::regex_match(input_str, std::regex("fn"))) return TokenResult(Token::tok_fn, input_str);
+    if (std::regex_match(input_str, std::regex("while"))) return TokenResult(Token::tok_while, input_str);
+    if (std::regex_match(input_str, std::regex("[a-zA-Z][a-zA-Z0-9]*"))) return TokenResult(Token::tok_identifier, input_str);
+    if (std::regex_match(input_str, std::regex("[0-9]+"))) return TokenResult(Token::tok_number, input_str);
 
-    return Token::tok_unknown;
+    return TokenResult(Token::tok_unknown, input_str);
 }
