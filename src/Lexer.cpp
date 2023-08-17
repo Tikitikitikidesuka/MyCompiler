@@ -5,7 +5,7 @@
 
 Token Lexer::getToken() {
     std::string input;
-    std::cin >> input;
+    if (!(std::cin >> input)) return Token::tok_eof;
 
     if (std::regex_match(input, std::regex("fn"))) return Token::tok_fn;
     if (std::regex_match(input, std::regex("while"))) return Token::tok_while;
