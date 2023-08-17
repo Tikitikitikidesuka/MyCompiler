@@ -3,4 +3,4 @@ project(MyCompiler)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(MyCompiler main.cpp)
+add_executable(MyCompiler main.cpp src/Lexer.cpp src/Lexer.h)
