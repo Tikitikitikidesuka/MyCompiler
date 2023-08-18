@@ -3,6 +3,7 @@
 #include <regex>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 TokenResult Lexer::getToken() {
     std::string input_buffer;
@@ -13,12 +14,12 @@ TokenResult Lexer::getToken() {
     if (input_char == EOF)
         return TokenResult(Token::tok_eof, "");
 
-    if (isnumber(input_char)) {
+    if (isdigit(input_char)) {
         do {
             input_buffer += input_char;
             input_char = std::cin.peek();
-            if (isnumber(input_char)) getchar();
-        } while (isnumber(input_char));
+            if (isdigit(input_char)) getchar();
+        } while (isdigit(input_char));
 
         return TokenResult(Token::tok_number, input_buffer);
     } else {
