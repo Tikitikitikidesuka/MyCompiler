@@ -3,13 +3,12 @@
 #include <regex>
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 
 TokenResult Lexer::getToken() {
     std::string input_buffer;
 
     char input_char = getchar();
-    while (input_char == ' ') input_char = getchar();
+    while (input_char != EOF && input_char <= ' ') input_char = getchar();
 
     if (input_char == EOF)
         return TokenResult(Token::tok_eof, "");
