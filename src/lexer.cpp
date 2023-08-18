@@ -5,6 +5,52 @@
 #include <vector>
 
 TokenResult Lexer::getToken() {
+    std::unordered_map<std::string, Token> str_to_token;
+    str_to_token[":"] = Token::tok_colon;
+    str_to_token[";"] = Token::tok_scolon;
+    str_to_token["("] = Token::tok_oparenthesis;
+    str_to_token[")"] = Token::tok_cparenthesis;
+    str_to_token["{"] = Token::tok_okey;
+    str_to_token["}"] = Token::tok_ckey;
+    str_to_token["["] = Token::tok_osquerebr;
+    str_to_token["]"] = Token::tok_csquerebr;
+    str_to_token["fn"] = Token::tok_fn;
+    str_to_token["while"] = Token::tok_while;
+
+    std::string input_buffer;
+
+    char input_char = getchar();
+    while (input_char <= ' ') input_char = getchar();
+
+    if (isnumber(input_char)) {
+        do {
+            input_buffer += input_char;
+            input_char = std::cin.peek();
+            if (isnumber(input_char)) getchar();
+        } while (isnumber(input_char));
+
+        return TokenResult(Token::tok_number, input_buffer);
+    } else {
+        while (input_char > ' ') {
+            input_buffer += input_char;
+
+            for (const auto &token_test: str_to_token) {
+                if (input_buffer == token_test.first)
+                    return TokenResult(token_test.second, input_buffer);
+            }
+
+            if (!isalnum(std::cin.peek()))
+                return TokenResult(Token::tok_identifier, input_buffer);
+
+            input_char = getchar();
+        }
+    }
+
+    return TokenResult(Token::tok_unknown, input_buffer);
+}
+
+/*
+TokenResult Lexer::getToken() {
     std::string input_str = "";
     char input = state;
     switch (input)
@@ -52,3 +98,4 @@ TokenResult Lexer::getToken() {
 
     return TokenResult(Token::tok_unknown, input_str);
 }
+*/
