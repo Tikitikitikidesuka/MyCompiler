@@ -5,18 +5,6 @@
 #include <vector>
 
 TokenResult Lexer::getToken() {
-    std::unordered_map<std::string, Token> str_to_token;
-    str_to_token[":"] = Token::tok_colon;
-    str_to_token[";"] = Token::tok_scolon;
-    str_to_token["("] = Token::tok_oparenthesis;
-    str_to_token[")"] = Token::tok_cparenthesis;
-    str_to_token["{"] = Token::tok_okey;
-    str_to_token["}"] = Token::tok_ckey;
-    str_to_token["["] = Token::tok_osquerebr;
-    str_to_token["]"] = Token::tok_csquerebr;
-    str_to_token["fn"] = Token::tok_fn;
-    str_to_token["while"] = Token::tok_while;
-
     std::string input_buffer;
 
     char input_char = getchar();
@@ -37,7 +25,7 @@ TokenResult Lexer::getToken() {
         while (input_char > ' ') {
             input_buffer += input_char;
 
-            for (const auto &token_test: str_to_token) {
+            for (const auto &token_test: this->str_to_token) {
                 if (input_buffer == token_test.first)
                     return TokenResult(token_test.second, input_buffer);
             }
