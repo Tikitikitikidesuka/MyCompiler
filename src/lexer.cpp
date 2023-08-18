@@ -20,7 +20,10 @@ TokenResult Lexer::getToken() {
     std::string input_buffer;
 
     char input_char = getchar();
-    while (input_char <= ' ') input_char = getchar();
+    while (input_char == ' ') input_char = getchar();
+
+    if (input_char == EOF)
+        return TokenResult(Token::tok_eof, "");
 
     if (isnumber(input_char)) {
         do {
