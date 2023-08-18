@@ -39,7 +39,7 @@ TokenResult Lexer::getToken() {
                     return TokenResult(token_test.second, input_buffer);
             }
 
-            if (!isalnum(std::cin.peek()))
+            if (isalnum(input_char) && !isalnum(std::cin.peek()))
                 return TokenResult(Token::tok_identifier, input_buffer);
 
             input_char = getchar();
