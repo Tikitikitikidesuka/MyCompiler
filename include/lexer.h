@@ -15,6 +15,7 @@ enum Token {
     //separators
     tok_scolon,
     tok_colon,
+    tok_comma,
 
     // operators
     tok_plus,
@@ -64,6 +65,7 @@ public:
         this->str_to_token["-"] = Token::tok_minus;
         this->str_to_token["*"] = Token::tok_multiply;
         this->str_to_token["/"] = Token::tok_divide;
+        this->str_to_token[","] = Token::tok_comma;
         this->str_to_token["fn"] = Token::tok_fn;
         this->str_to_token["while"] = Token::tok_while;
     }
