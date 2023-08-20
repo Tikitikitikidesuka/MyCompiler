@@ -53,21 +53,11 @@ private:
     std::unordered_map<std::string, Token> str_to_token;
 public:
     Lexer() {
-        this->str_to_token[":"] = Token::tok_colon;
-        this->str_to_token[";"] = Token::tok_scolon;
-        this->str_to_token["("] = Token::tok_oparenthesis;
-        this->str_to_token[")"] = Token::tok_cparenthesis;
-        this->str_to_token["{"] = Token::tok_okey;
-        this->str_to_token["}"] = Token::tok_ckey;
-        this->str_to_token["["] = Token::tok_osquerebr;
-        this->str_to_token["]"] = Token::tok_csquerebr;
-        this->str_to_token["+"] = Token::tok_plus;
-        this->str_to_token["-"] = Token::tok_minus;
-        this->str_to_token["*"] = Token::tok_multiply;
-        this->str_to_token["/"] = Token::tok_divide;
-        this->str_to_token[","] = Token::tok_comma;
-        this->str_to_token["fn"] = Token::tok_fn;
-        this->str_to_token["while"] = Token::tok_while;
+        this->str_to_token["+"] = Token::TOKE_PLUS;
+        this->str_to_token["-"] = Token::TOK_MINUS;
+        this->str_to_token["="] = Token::TOK_ASSIGN;
+        this->std_to_token["("] = Token::TOK_PARENTHESIS_OPEN;
+        this->std_to_token[")"] = Token::TOK_PARENTHESIS_CLOSE;
     }
     TokenResult getToken();
 };
