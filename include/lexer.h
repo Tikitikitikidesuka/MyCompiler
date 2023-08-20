@@ -33,7 +33,7 @@ private:
     std::unordered_map<std::string, Token> str_to_token;
 public:
     Lexer() {
-        this->str_to_token["+"] = Token::TOKE_PLUS;
+        this->str_to_token["+"] = Token::TOK_PLUS;
         this->str_to_token["-"] = Token::TOK_MINUS;
         this->str_to_token["="] = Token::TOK_ASSIGN;
         this->std_to_token["("] = Token::TOK_PARENTHESIS_OPEN;
