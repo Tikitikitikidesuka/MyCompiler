@@ -1,8 +1,5 @@
 #include "lexer.h"
 
-#include <iostream>
-#include <sstream>
-
 std::unique_ptr<Token> Lexer::getToken() {
     std::string input_buffer;
 
@@ -43,5 +40,5 @@ std::unique_ptr<Token> Lexer::getToken() {
         }
     }
 
-    return std::make_unique<Token>(RWToken(RWTokenType::TOK_UNKOWN));
+    return nullptr;
 }

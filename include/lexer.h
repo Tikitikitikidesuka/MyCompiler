@@ -3,7 +3,6 @@
 
 
 #include <iostream>
-#include <unordered_map>
 
 enum TokenType {
     TOK_NUM,
@@ -23,7 +22,7 @@ enum RWTokenType {
     TOK_UNKOWN,
 };
 
-RWTokenType resolveReservedWord(const std::string& str) {
+inline RWTokenType resolveReservedWord(const std::string& str) {
     if (str == "+") return TOK_PLUS;
     if (str == "-") return TOK_MINUS;
     if (str == "=") return TOK_ASSIGN;
@@ -67,7 +66,8 @@ class Lexer {
 private:
     std::istream& stream;
 public:
-    Lexer(const std::istream& stream) : stream(stream) {};
+    Lexer() : stream(std::cin) {};
+    Lexer(std::istream& stream) : stream(stream) {};
     std::unique_ptr<Token> getToken();
 };
 
