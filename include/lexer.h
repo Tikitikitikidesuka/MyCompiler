@@ -52,8 +52,8 @@ public:
         this->str_to_token["+"] = Token::TOK_PLUS;
         this->str_to_token["-"] = Token::TOK_MINUS;
         this->str_to_token["="] = Token::TOK_ASSIGN;
-        this->std_to_token["("] = Token::TOK_PARENTHESIS_OPEN;
-        this->std_to_token[")"] = Token::TOK_PARENTHESIS_CLOSE;
+        this->str_to_token["("] = Token::TOK_PARENTHESIS_OPEN;
+        this->str_to_token[")"] = Token::TOK_PARENTHESIS_CLOSE;
     }
     TokenResult getToken();
 };
