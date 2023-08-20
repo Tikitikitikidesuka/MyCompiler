@@ -6,36 +6,16 @@
 #include <unordered_map>
 
 enum Token {
-    tok_eof,
+    TOK_EOF,
 
-    // Keywords
-    tok_fn,
-    tok_while,
+    TOK_ID,
+    TOK_NUM,
 
-    //separators
-    tok_scolon,
-    tok_colon,
-    tok_comma,
-
-    // operators
-    tok_plus,
-    tok_minus,
-    tok_multiply,
-    tok_divide,
-
-    //parenthesis
-    tok_oparenthesis, 
-    tok_cparenthesis,
-    tok_osquerebr,
-    tok_csquerebr,
-    tok_okey,
-    tok_ckey,
-
-    // Other
-    tok_identifier,
-    tok_number,
-
-    tok_unknown,
+    TOK_ASSIGN,
+    TOK_PLUS,
+    TOK_MINUS,
+    TOK_PARENTHESIS_OPEN,
+    TOK_PARENTHESIS_CLOSE,
 };
 
 class TokenResult {
