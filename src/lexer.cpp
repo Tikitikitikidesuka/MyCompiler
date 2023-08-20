@@ -4,40 +4,48 @@
 #include <iostream>
 #include <vector>
 
-TokenResult Lexer::getToken() {
+std::unique_ptr<Token> Lexer::getToken() {
     std::string input_buffer;
 
     char input_char = getchar();
-    while (input_char != EOF && input_char <= ' ') input_char = getchar();
 
+    // Consume separators or EOF
+    while (input_char != EOF && input_char <= ' ')
+        input_char = getchar();
+
+    // Return if token is EOF
     if (input_char == EOF)
-        return TokenResult(Token::tok_eof, "");
+        return std::make_unique<Token>(RWToken(RWTokenType::TOK_EOF));
 
+    // Token is number literal
     if (isdigit(input_char)) {
-        do {
+        input_buffer += input_char;
+        input_char = std::cin.peek(); // Read char without consuming
+
+        while (isdigit(input_char)) {
+            getchar(); // Consume peeked char
             input_buffer += input_char;
             input_char = std::cin.peek();
-            if (isdigit(input_char)) getchar();
-        } while (isdigit(input_char));
-
-        return TokenResult(Token::tok_number, input_buffer);
-    } else {
+        }
+    } else { // Token is identifier or reserved word
         while (input_char > ' ') {
             input_buffer += input_char;
 
-            for (const auto &token_test: this->str_to_token) {
+            // Check if token is a reserved word
+            for (const auto& token_test : this->str_to_token) {
                 if (input_buffer == token_test.first)
-                    return TokenResult(token_test.second, input_buffer);
+                    return std::make_unique<Token>(RWToken(token_test.second));
             }
 
+            // Check if token is an identifier
             if (isalnum(input_char) && !isalnum(std::cin.peek()))
-                return TokenResult(Token::tok_identifier, input_buffer);
+                return std::make_unique<Token>(IdToken(input_buffer));
 
             input_char = getchar();
         }
     }
 
-    return TokenResult(Token::tok_unknown, input_buffer);
+    return std::make_unique<Token>(Token(TokenType::TOK_UNKOWN));
 }
 
 /*
