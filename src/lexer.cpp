@@ -1,16 +1,16 @@
 #include "lexer.h"
 
 #include <iostream>
-#include <vector>
+#include <sstream>
 
 std::unique_ptr<Token> Lexer::getToken() {
     std::string input_buffer;
 
-    char input_char = getchar();
+    char input_char = this->stream.get();
 
     // Consume separators or EOF
     while (input_char != EOF && input_char <= ' ')
-        input_char = getchar();
+        input_char = this->stream.get();
 
     // Return if token is EOF
     if (input_char == EOF)
@@ -19,12 +19,12 @@ std::unique_ptr<Token> Lexer::getToken() {
     // Token is number literal
     if (isdigit(input_char)) {
         input_buffer += input_char;
-        input_char = std::cin.peek(); // Read char without consuming
+        input_char = this->stream.peek(); // Read char without consuming
 
         while (isdigit(input_char)) {
-            getchar(); // Consume peeked char
+            this->stream.get(); // Consume peeked char
             input_buffer += input_char;
-            input_char = std::cin.peek();
+            input_char = this->stream.peek();
         }
     } else { // Token is identifier or reserved word
         while (input_char > ' ') {
@@ -36,10 +36,10 @@ std::unique_ptr<Token> Lexer::getToken() {
                 return std::make_unique<Token>(RWToken(rw_type));
 
             // Check if token is an identifier
-            if (isalnum(input_char) && !isalnum(std::cin.peek()))
+            if (isalnum(input_char) && !isalnum(this->stream.peek()))
                 return std::make_unique<Token>(IdToken(input_buffer));
 
-            input_char = getchar();
+            input_char = this->stream.get();
         }
     }
 

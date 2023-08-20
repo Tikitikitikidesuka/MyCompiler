@@ -65,8 +65,9 @@ public:
 
 class Lexer {
 private:
-    char state;
+    std::istream& stream;
 public:
+    Lexer(const std::istream& stream) : stream(stream) {};
     std::unique_ptr<Token> getToken();
 };
 
