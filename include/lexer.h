@@ -5,12 +5,6 @@
 #include <iostream>
 
 enum TokenType {
-    TOK_NUM,
-    TOK_ID,
-    TOK_RW,
-};
-
-enum RWTokenType {
     TOK_EOF,
 
     TOK_ASSIGN,
@@ -19,48 +13,37 @@ enum RWTokenType {
     TOK_PARENTHESIS_OPEN,
     TOK_PARENTHESIS_CLOSE,
 
-    TOK_UNKOWN,
+    TOK_ID,
+    TOK_NUM,
+
+    TOK_INVALID,
 };
 
-inline RWTokenType resolveReservedWord(const std::string& str) {
+inline TokenType resolveReservedWord(const std::string& str) {
     if (str == "+") return TOK_PLUS;
     if (str == "-") return TOK_MINUS;
     if (str == "=") return TOK_ASSIGN;
     if (str == "(") return TOK_PARENTHESIS_OPEN;
     if (str == ")") return TOK_PARENTHESIS_CLOSE;
-    return TOK_UNKOWN;
+    return TOK_INVALID;
 }
 
 class Token {
 private:
     TokenType type;
+    std::string lexeme;
 public:
-    virtual ~Token() = default;
-    Token(TokenType type) : type(type) {}
-    TokenType getType() { return this->type; }
+    Token(TokenType type, const std::string& lexeme) : type(type), lexeme(lexeme) {}
+    TokenType getType() const { return this->type; }
+    std::string getLexeme() const { return this->lexeme; }
+    friend bool operator==(const Token& lhs, const Token& rhs);
 };
 
-class NumToken : public Token {
-private:
-    int32_t num;
-public:
-    NumToken(int32_t num) : Token(TokenType::TOK_NUM), num(num) {}
-};
-
-class IdToken : public Token {
-private:
-    std::string id;
-public:
-    IdToken(const std::string& id) : Token(TokenType::TOK_ID), id(id) {}
-};
-
-class RWToken : public Token {
-private:
-    RWTokenType rw_type;
-public:
-    RWToken(RWTokenType rw_type) : Token(TokenType::TOK_RW), rw_type(rw_type) {}
-};
-
+inline bool operator==(const Token& lhs, const Token& rhs) {
+    return lhs.type == rhs.type
+           && (lhs.type != TokenType::TOK_NUM || lhs.lexeme == rhs.lexeme)
+           && (lhs.type != TokenType::TOK_ID || lhs.lexeme == rhs.lexeme);
+}
 
 class Lexer {
 private:
@@ -68,7 +51,7 @@ private:
 public:
     Lexer() : stream(std::cin) {};
     Lexer(std::istream& stream) : stream(stream) {};
-    std::unique_ptr<Token> getToken();
+    Token nextToken() const;
 };
 
 
