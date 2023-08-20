@@ -5,7 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 
-enum Token {
+enum TokenType {
     TOK_EOF,
 
     TOK_ID,
@@ -18,14 +18,30 @@ enum Token {
     TOK_PARENTHESIS_CLOSE,
 };
 
-class TokenResult {
+class Token {
+private:
+    TokenType type;
 public:
-    Token token;
-    std::string text;
-
-    TokenResult(Token token, std::string text)
-    : token(token), text(text) {};
+    virtual ~Token() = default;
+    TokenType getType() {
+        return this->type;
+    }
 };
+
+class NumToken : public Token {
+private:
+    int32_t num;
+public:
+    NumToken(int32_t num) : type(Token::TOK_NUM), num(num) {}
+};
+
+class IdToken : public Token {
+private:
+    std::string id;
+public:
+    IdToken(const std::string& id) : type(Token::TOK_ID), id(id) {}
+};
+
 
 class Lexer {
 private:
