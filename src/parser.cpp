@@ -1,38 +1,68 @@
-#include "../include/parser.h"
+#include "parser.h"
 
-std::unique_ptr<Token> Parser::getNewToken() {
-    return std::move(this->lexer.getToken());
+Token Parser::getNewToken() {
+    this->current_token = this->lexer.nextToken();
+    return this->current_token;
 }
 
-std::unique_ptr<Expression> Parser::logError(char* msg) {
-    fprintf(stderr, msg);
+std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
+    std::cerr << msg;
     return nullptr;
 }
 
-std::unique_ptr<Expression> Parser::primaryExpression() {
-    // CLASIFIES SIMPLE EXPRESIONS
-    switch (this->current_token->getType()) {
-        case TOK_NUM:
-        {// conversión Token a numToken (a un puntero)
-            std::unique_ptr<NumToken> num_token(dynamic_cast<NumToken*>(current_token.get()));
-            ParseNumExpr(std::make_unique<ExpressionNum>(ExpressionNum(num_token->getNum())));
-        }
-        case TOK_ID:
-        {
-            std::unique_ptr<IdToken> id_token(dynamic_cast<IdToken*>(current_token.get()));
-            ParseIdExpr(std::make_unique<ExpressionId>(ExpressionId(id_token->getId())));
-            
-        }
-        case TOK_RW:
-        {
-            std::unique_ptr<RWToken> rw_token(dynamic_cast<RWToken*>(current_token.get()));
-            switch (rw_token->getType()) {
-                case TOK_PARENTHESIS_OPEN:
-                    ParseParenExpr()
-            }
-            return
-            
-        }
-            return;
+std::unique_ptr<Expression> Parser::parseExpr() {
+    if (this->current_token.getType() == TOK_PARENTHESIS_OPEN) {
+        return this->parseParenthesisExpr();
+
+    } else {
+        return this->parseBinaryExpr();
     }
+}
+
+std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
+    std::unique_ptr<Expression> expr = this->parseExpr();
+
+    if (expr && this->getNewToken().getType() == TOK_PARENTHESIS_CLOSE) {
+        return std::make_unique<Expression>(ParenthesisExpr(std::move(expr)));
+    } else {
+        return nullptr;
+    }
+}
+std::unique_ptr<Expression> Parser::parseLiteralExpr() {
+    switch (this->current_token.getType()) {
+        case TOK_NUM:
+            return this->parseNumExpr();
+        case TOK_ID:
+            return this->parseIdExpr();
+        default:
+            return this->logError("Unexpected Token: " + this->current_token.getLexeme());
+    }
+}
+
+std::unique_ptr<Expression> Parser::parseNumExpr() {
+    this->getNewToken();
+    return std::make_unique<Expression>(ExpressionNum(stoi(this->current_token.getLexeme())));
+}
+
+std::unique_ptr<Expression> Parser::parseIdExpr() {
+    this->getNewToken();
+    return std::make_unique<Expression>(ExpressionId(this->current_token.getLexeme()));
+}
+
+std::unique_ptr<Expression> Parser::parseBinaryExpr() {
+    auto expr = this->parseLiteralExpr();
+    this->getNewToken();
+    if (this->current_token.getType() == TOK_PLUS || this->current_token.getType() == TOK_MINUS) {
+        return this->parseOperationExpr(std::move(expr));
+    }
+    
+    if (this->current_token.getType() == TOK_ASSIGN) {
+        return this->parseAssignmentExpr();
+    }
+
+    return std::make_unique<Expression>(expr);
+}
+
+std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expression> lhs) {
+    return nullptr;
 }

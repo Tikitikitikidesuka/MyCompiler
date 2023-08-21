@@ -12,13 +12,21 @@
 
 class Parser {
 private:
-    std::unique_ptr<Token> current_token;
+    Token current_token;
     Lexer lexer;
 
+    Token getNewToken();
+    std::unique_ptr<Expression> parseExpr(); // clasifies the current token and consumes it
+    std::unique_ptr<Expression> logError (const std::string& msg);
+    std::unique_ptr<Expression> parseLiteralExpr();
+    std::unique_ptr<Expression> parseNumExpr();
+    std::unique_ptr<Expression> parseIdExpr();
+    std::unique_ptr<Expression> parseParenthesisExpr();
+    std::unique_ptr<Expression> parseBinaryExpr();
+    std::unique_ptr<Expression> parseOperationExpr(std::unique_ptr<Expression> lhs);
+    std::unique_ptr<Expression> parseAssignmentExpr();
+
 public:
-    std::unique_ptr<Token> getNewToken();
-    std::unique_ptr<Expression> logError (char* msg);
-    std::unique_ptr<Expression> primaryExpression(); // clasifies the current token and consumes it
 
 };
 
