@@ -1,11 +1,4 @@
 #include "lexer.h"
-int32_t NumToken::getNum() {
-    return this->num;
-}
-
-std::string IdToken::getId() {
-    return this->id;
-}
 
 Token Lexer::nextToken() const {
     std::string input_buffer;
