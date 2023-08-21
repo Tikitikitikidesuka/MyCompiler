@@ -51,6 +51,8 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 
 std::unique_ptr<Expression> Parser::parseBinaryExpr() {
     auto expr = this->parseLiteralExpr();
+    if (expr == nullptr) return expr;
+
     this->getNewToken();
     if (this->current_token.getType() == TOK_PLUS || this->current_token.getType() == TOK_MINUS) {
         return this->parseOperationExpr(std::move(expr));
@@ -64,7 +66,8 @@ std::unique_ptr<Expression> Parser::parseBinaryExpr() {
 }
 
 std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expression> lhs) {
-    return nullptr;
+    TokenType operation = this->current_token.getType();
+    
 }
 
 std::unique_ptr<Expression> Parser::parseAssignmentExpr() {
