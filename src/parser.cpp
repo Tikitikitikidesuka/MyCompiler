@@ -11,13 +11,17 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
 }
 
 std::unique_ptr<Expression> Parser::parseExpr() {
-    if (this->getNewToken().getType() == TOK_PARENTHESIS_OPEN) {
+    if (this-> getNewToken().getType() == TOK_EOF) {
+        std::cout << "FIN\n";
+        return nullptr;
+    }
+    /*if (this->getNewToken().getType() == TOK_PARENTHESIS_OPEN) {
         return this->parseParenthesisExpr();
 
     } else if (this->current_token.getType() == TOK_SEPARATOR) {
         return std::make_unique<SeparatorExpression>(SeparatorExpression());
     
-    } else {
+    }*/ else {
         return this->parseBinaryExpr();
     }
 }
@@ -37,6 +41,8 @@ std::unique_ptr<Expression> Parser::parseLiteralExpr() {
             return this->parseNumExpr();
         case TOK_ID:
             return this->parseIdExpr();
+        case TOK_PARENTHESIS_OPEN:
+            return this->parseParenthesisExpr();
         default:
             return this->logError("Unexpected Token: " + this->current_token.getLexeme());
     }
