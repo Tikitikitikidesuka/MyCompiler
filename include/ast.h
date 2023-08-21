@@ -13,6 +13,13 @@ enum Operator {
     SUBTRACTION
 };
 
+enum ExprType {
+    EXPR_NUM,
+    EXPR_ID,
+    EXPR_PARENTHESIS,
+    EXPR_BINARY
+};
+
 class Expression {
 public:
     virtual ~Expression() = default;
