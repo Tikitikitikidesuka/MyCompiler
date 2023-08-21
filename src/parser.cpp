@@ -14,6 +14,9 @@ std::unique_ptr<Expression> Parser::parseExpr() {
     if (this->getNewToken().getType() == TOK_PARENTHESIS_OPEN) {
         return this->parseParenthesisExpr();
 
+    } else if (this->current_token.getType() == TOK_SEPARATOR) {
+        return SeparatorExpression();
+    
     } else {
         return this->parseBinaryExpr();
     }
@@ -40,12 +43,10 @@ std::unique_ptr<Expression> Parser::parseLiteralExpr() {
 }
 
 std::unique_ptr<Expression> Parser::parseNumExpr() {
-    this->getNewToken();
     return std::make_unique<NumberExpression>(NumberExpression(stoi(this->current_token.getLexeme())));
 }
 
 std::unique_ptr<Expression> Parser::parseIdExpr() {
-    this->getNewToken();
     return std::make_unique<IdExpression>(IdExpression(this->current_token.getLexeme()));
 }
 
@@ -93,6 +94,6 @@ std::unique_ptr<Expression> Parser::parseAssignmentExpr(std::unique_ptr<Expressi
         return std::make_unique<BinaryExpression>(BinaryExpression(
                 Operator::OP_ASSIGNMENT, std::move(lhs), std::move(rhs)));
     } else {
-        return rhs;
+        return logError("Expression incomplete");
     }
 }

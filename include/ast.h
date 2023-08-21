@@ -16,6 +16,7 @@ enum Operator {
 };
 
 enum ExprType {
+    EXPR_SEPARATOR,
     EXPR_NUM,
     EXPR_ID,
     EXPR_PARENTHESIS,
@@ -27,6 +28,17 @@ public:
     virtual ~Expression() = default;
     virtual ExprType getType() = 0;
     virtual std::string toString() = 0;
+};
+
+// SEPARATOR
+
+class SeparatorExpression : public Expression {
+public:
+    ExprType getType() { return EXPR_SEPARATOR; }
+    
+    std::string toString() {
+        return "SEPARATOR";
+    }
 };
 
 // SIMPLE EXPRESSIONS
