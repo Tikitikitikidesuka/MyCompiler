@@ -4,6 +4,7 @@
 
 #include <string>
 #include <memory>
+#include <sstream>
 
 #include "lexer.h"
 
@@ -25,6 +26,7 @@ class Expression {
 public:
     virtual ~Expression() = default;
     virtual ExprType getType() = 0;
+    virtual std::string toString() = 0;
 };
 
 // SIMPLE EXPRESSIONS
@@ -36,6 +38,10 @@ public:
     IdExpression(std::string name)
     : name(name) {}
     ExprType getType() { return EXPR_ID; }
+
+    std::string toString() {
+        return "ID: " + this->name;
+    }
 };
 
 class NumberExpression : public Expression {
@@ -45,6 +51,10 @@ public:
     NumberExpression(int32_t value)
     : value(value) {}
     ExprType getType() { return EXPR_NUM; }
+
+    std::string toString() {
+        return "NUM: " + std::to_string(this->value);
+    }
 };
 
 // BINARY EXPRESSIONS
@@ -57,6 +67,10 @@ public:
     BinaryExpression(Operator operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs) 
     : operation(operation), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
     ExprType getType() { return EXPR_BINARY; }
+
+    std::string toString() {
+        return "BIN: " + std::to_string(this->operation) + "\n\t" + this->lhs->toString() + "\n\t" + this->rhs->toString();
+    }
 };
 
 // PARENTHESIS EXPRESSIONS
@@ -68,6 +82,10 @@ public:
     ParenthesisExpression(std::unique_ptr<Expression> expr)
     : inner_expression(std::move(expr)) {}
     ExprType getType() { return EXPR_PARENTHESIS; }
+
+    std::string toString() {
+        return "PARENTHESIS:\n\t" + this->inner_expression->toString();
+    }
 };
 
 
