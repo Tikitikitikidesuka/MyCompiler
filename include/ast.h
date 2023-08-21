@@ -9,8 +9,9 @@
 
 // MISCELLANEOUS
 enum Operator {
-    ADDITION,
-    SUBTRACTION
+    OP_ADDITION,
+    OP_SUBTRACTION,
+    OP_ASSIGNMENT,
 };
 
 enum ExprType {
