@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+#include <memory>
 
 enum TokenType {
     TOK_NUM,
@@ -45,6 +46,7 @@ private:
     int32_t num;
 public:
     NumToken(int32_t num) : Token(TokenType::TOK_NUM), num(num) {}
+    int32_t getNum();
 };
 
 class IdToken : public Token {
@@ -52,6 +54,7 @@ private:
     std::string id;
 public:
     IdToken(const std::string& id) : Token(TokenType::TOK_ID), id(id) {}
+    std::string getId();
 };
 
 class RWToken : public Token {
@@ -59,6 +62,7 @@ private:
     RWTokenType rw_type;
 public:
     RWToken(RWTokenType rw_type) : Token(TokenType::TOK_RW), rw_type(rw_type) {}
+    RWTokenType getType() {return this->rw_type;}
 };
 
 
