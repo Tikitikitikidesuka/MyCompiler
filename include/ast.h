@@ -13,7 +13,6 @@ enum Operator {
     SUBTRACTION
 };
 
-
 class Expression {
 public:
     virtual ~Expression() = default;
