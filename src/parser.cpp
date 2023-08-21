@@ -60,9 +60,13 @@ std::unique_ptr<Expression> Parser::parseBinaryExpr() {
         return this->parseAssignmentExpr();
     }
 
-    return std::make_unique<Expression>(expr);
+    return std::move(expr);
 }
 
 std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expression> lhs) {
+    return nullptr;
+}
+
+std::unique_ptr<Expression> Parser::parseAssignmentExpr() {
     return nullptr;
 }
