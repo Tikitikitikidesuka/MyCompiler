@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 
-#include <iostream>
-#include <sstream>
 #include <vector>
 
 #include "lexer.h"
@@ -126,6 +124,18 @@ TEST(LexerTest, NumberToken) {
     expected_tokens.push_back(Token(TokenType::TOK_EOF, ""));
 
     lexer_test("33", expected_tokens);
+}
+
+TEST(LexerTest, NumberTokenIsInt) {
+    // Setup
+    std::istringstream test_stream{" \t   42 \t\n "};
+    std::vector<Token> results;
+    Lexer lexer(test_stream);
+
+
+    // Run test
+    Token token = lexer.nextToken();
+    EXPECT_EQ(stoi(token.getLexeme()), 42);
 }
 
 TEST(LexerTest, SmallProgram) {
