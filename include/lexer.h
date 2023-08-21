@@ -13,6 +13,7 @@ enum TokenType {
     TOK_MINUS,
     TOK_PARENTHESIS_OPEN,
     TOK_PARENTHESIS_CLOSE,
+    TOK_SEPARATOR,
 
     TOK_ID,
     TOK_NUM,
@@ -26,6 +27,7 @@ inline TokenType resolveReservedWord(const std::string& str) {
     if (str == "=") return TOK_ASSIGN;
     if (str == "(") return TOK_PARENTHESIS_OPEN;
     if (str == ")") return TOK_PARENTHESIS_CLOSE;
+    if (str == ";") return TOK_SEPARATOR;
     return TOK_INVALID;
 }
 
