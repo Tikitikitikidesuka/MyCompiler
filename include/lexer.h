@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+#include <memory>
 
 enum TokenType {
     TOK_EOF,
