@@ -34,7 +34,7 @@ private:
 public:
     ExpressionId(std::string name) 
     : name(name) {}
-    ExprType getType() { return EXPR_ID }
+    ExprType getType() { return EXPR_ID; }
 };
 
 class ExpressionNum : public Expression {
@@ -43,7 +43,7 @@ private:
 public:
     ExpressionNum(int32_t value)
     : value(value) {}
-    ExprType getType() { return EXPR_NUM }
+    ExprType getType() { return EXPR_NUM; }
 };
 
 // BINARY EXPRESSIONS
@@ -55,7 +55,7 @@ private:
 public:
     BinaryExpression(Operator operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs) 
     : operation(operation), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
-    ExprType getType() { return EXPR_BINARY }
+    ExprType getType() { return EXPR_BINARY; }
 };
 
 // PARENTHESIS EXPRESSIONS
@@ -66,7 +66,7 @@ private:
 public:
     ParenthesisExpr(std::unique_ptr<Expression> expr)
     : inner_expression(std::move(expr)) {}
-    ExprType getType() { return EXPR_PARENTHESIS }
+    ExprType getType() { return EXPR_PARENTHESIS; }
 };
 
 
