@@ -24,7 +24,7 @@ private:
     std::unique_ptr<Expression> parseParenthesisExpr();
     std::unique_ptr<Expression> parseBinaryExpr();
     std::unique_ptr<Expression> parseOperationExpr(std::unique_ptr<Expression> lhs);
-    std::unique_ptr<Expression> parseAssignmentExpr();
+    std::unique_ptr<Expression> parseAssignmentExpr(std::unique_ptr<Expression> lhs);
 
 public:
 

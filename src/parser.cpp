@@ -23,7 +23,7 @@ std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
     std::unique_ptr<Expression> expr = this->parseExpr();
 
     if (expr && this->getNewToken().getType() == TOK_PARENTHESIS_CLOSE) {
-        return std::make_unique<Expression>(ParenthesisExpr(std::move(expr)));
+        return std::make_unique<ParenthesisExpression>(ParenthesisExpression(std::move(expr)));
     } else {
         return nullptr;
     }
@@ -41,12 +41,12 @@ std::unique_ptr<Expression> Parser::parseLiteralExpr() {
 
 std::unique_ptr<Expression> Parser::parseNumExpr() {
     this->getNewToken();
-    return std::make_unique<Expression>(ExpressionNum(stoi(this->current_token.getLexeme())));
+    return std::make_unique<NumberExpression>(NumberExpression(stoi(this->current_token.getLexeme())));
 }
 
 std::unique_ptr<Expression> Parser::parseIdExpr() {
     this->getNewToken();
-    return std::make_unique<Expression>(ExpressionId(this->current_token.getLexeme()));
+    return std::make_unique<IdExpression>(IdExpression(this->current_token.getLexeme()));
 }
 
 std::unique_ptr<Expression> Parser::parseBinaryExpr() {
@@ -57,7 +57,7 @@ std::unique_ptr<Expression> Parser::parseBinaryExpr() {
     }
     
     if (this->current_token.getType() == TOK_ASSIGN) {
-        return this->parseAssignmentExpr();
+        return this->parseAssignmentExpr(std::move(expr));
     }
 
     return std::move(expr);
@@ -67,6 +67,6 @@ std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expressio
     return nullptr;
 }
 
-std::unique_ptr<Expression> Parser::parseAssignmentExpr() {
+std::unique_ptr<Expression> Parser::parseAssignmentExpr(std::unique_ptr<Expression> lhs) {
     return nullptr;
 }
