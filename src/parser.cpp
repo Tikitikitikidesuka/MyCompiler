@@ -15,7 +15,7 @@ std::unique_ptr<Expression> Parser::parseExpr() {
         return this->parseParenthesisExpr();
 
     } else if (this->current_token.getType() == TOK_SEPARATOR) {
-        return SeparatorExpression();
+        return std::make_unique<SeparatorExpression>(SeparatorExpression());
     
     } else {
         return this->parseBinaryExpr();
@@ -53,7 +53,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 std::unique_ptr<Expression> Parser::parseBinaryExpr() {
     auto expr = this->parseLiteralExpr();
     if (expr == nullptr) return logError("Must be a literal\n");
-
+    if (expr->getType() == EXPR_SEPARATOR) return expr;
     this->getNewToken();
 
     if (this->current_token.getType() == TOK_PLUS || this->current_token.getType() == TOK_MINUS) {
