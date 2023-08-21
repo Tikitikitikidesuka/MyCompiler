@@ -28,20 +28,20 @@ public:
 
 // SIMPLE EXPRESSIONS
 
-class ExpressionId : public Expression {
+class IdExpression : public Expression {
 private:
     std::string name;
 public:
-    ExpressionId(std::string name) 
+    IdExpression(std::string name)
     : name(name) {}
     ExprType getType() { return EXPR_ID; }
 };
 
-class ExpressionNum : public Expression {
+class NumberExpression : public Expression {
 private:
     int32_t value;
 public:
-    ExpressionNum(int32_t value)
+    NumberExpression(int32_t value)
     : value(value) {}
     ExprType getType() { return EXPR_NUM; }
 };
@@ -60,11 +60,11 @@ public:
 
 // PARENTHESIS EXPRESSIONS
 
-class ParenthesisExpr : public Expression {
+class ParenthesisExpression : public Expression {
 private:
     std::unique_ptr<Expression> inner_expression;
 public:
-    ParenthesisExpr(std::unique_ptr<Expression> expr)
+    ParenthesisExpression(std::unique_ptr<Expression> expr)
     : inner_expression(std::move(expr)) {}
     ExprType getType() { return EXPR_PARENTHESIS; }
 };
