@@ -25,7 +25,7 @@ std::unique_ptr<Expression> Parser::parseExpr() {
 std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
     std::unique_ptr<Expression> expr = this->parseExpr();
 
-    if (expr && this->getNewToken().getType() == TOK_PARENTHESIS_CLOSE) {
+    if (expr && this->current_token.getType() == TOK_PARENTHESIS_CLOSE) {
         return std::make_unique<ParenthesisExpression>(ParenthesisExpression(std::move(expr)));
     } else {
         return nullptr;
