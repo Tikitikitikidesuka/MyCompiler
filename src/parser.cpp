@@ -11,7 +11,7 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
 }
 
 std::unique_ptr<Expression> Parser::parseExpr() {
-    if (this->current_token.getType() == TOK_PARENTHESIS_OPEN) {
+    if (this->getNewToken().getType() == TOK_PARENTHESIS_OPEN) {
         return this->parseParenthesisExpr();
 
     } else {
@@ -51,7 +51,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 
 std::unique_ptr<Expression> Parser::parseBinaryExpr() {
     auto expr = this->parseLiteralExpr();
-    if (expr == nullptr) return expr;
+    if (expr == nullptr) return logError("Must be a literal\n");
 
     this->getNewToken();
     if (this->current_token.getType() == TOK_PLUS || this->current_token.getType() == TOK_MINUS) {
@@ -67,6 +67,18 @@ std::unique_ptr<Expression> Parser::parseBinaryExpr() {
 
 std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expression> lhs) {
     TokenType operation = this->current_token.getType();
+    auto rhs = parseExpr();
+    if (rhs == nullptr) return logError("Binary Expression incomplete");
+    switch (operation) {
+    case TOK_PLUS:
+        return std::make_unique<BinaryExpression>(BinaryExpression(OP_ADDITION, std::move(lhs), std::move(rhs)));
+    case TOK_MINUS:
+        return std::make_unique<BinaryExpression>(BinaryExpression(OP_SUBTRACTION, std::move(lhs), std::move(rhs)));
+
+    default:
+        return logError("Unexpected operation");
+        
+    }
     
 }
 
