@@ -31,10 +31,8 @@ inline Operation resolveOperation(TokenType token_type) {
 }
 
 enum ExprType {
-    EXPR_SEPARATOR,
     EXPR_NUM,
     EXPR_ID,
-    EXPR_PARENTHESIS,
     EXPR_BINARY
 };
 
@@ -45,19 +43,6 @@ public:
     virtual std::string toString() = 0;
 };
 
-// SEPARATOR
-
-class SeparatorExpression : public Expression {
-public:
-    ExprType getType() { return EXPR_SEPARATOR; }
-    
-    std::string toString() {
-        return "SEPARATOR";
-    }
-};
-
-// SIMPLE EXPRESSIONS
-
 class IdExpression : public Expression {
 private:
     std::string name;
@@ -67,7 +52,7 @@ public:
     ExprType getType() { return EXPR_ID; }
 
     std::string toString() {
-        return "ID: " + this->name;
+        return this->name;
     }
 };
 
@@ -80,11 +65,9 @@ public:
     ExprType getType() { return EXPR_NUM; }
 
     std::string toString() {
-        return "NUM: " + std::to_string(this->value);
+        return std::to_string(this->value);
     }
 };
-
-// BINARY EXPRESSIONS
 
 class BinaryExpression : public Expression {
 private:
@@ -96,22 +79,7 @@ public:
     ExprType getType() { return EXPR_BINARY; }
 
     std::string toString() {
-        return "BIN: " + std::to_string(this->operation) + "\n\t" + this->lhs->toString() + "\n\t" + this->rhs->toString();
-    }
-};
-
-// PARENTHESIS EXPRESSIONS
-
-class ParenthesisExpression : public Expression {
-private:
-    std::unique_ptr<Expression> inner_expression;
-public:
-    ParenthesisExpression(std::unique_ptr<Expression> expr)
-    : inner_expression(std::move(expr)) {}
-    ExprType getType() { return EXPR_PARENTHESIS; }
-
-    std::string toString() {
-        return "PARENTHESIS:\n\t" + this->inner_expression->toString();
+        return "(" + this->lhs->toString() + "op(" + std::to_string(this->operation) + ")" + this->rhs->toString();
     }
 };
 
