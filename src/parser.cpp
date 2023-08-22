@@ -35,7 +35,7 @@ std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
         return nullptr;
     }
 }
-std::unique_ptr<Expression> Parser::parseLiteralExpr() {
+std::unique_ptr<Expression> Parser::parsePrimary() {
     switch (this->current_token.getType()) {
         case TOK_NUM:
             return this->parseNumExpr();
@@ -57,7 +57,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 }
 
 std::unique_ptr<Expression> Parser::parseBinaryExpr() {
-    auto expr = this->parseLiteralExpr();
+    auto expr = this->parsePrimary();
     if (expr == nullptr) return logError("Must be a literal\n");
     if (expr->getType() == EXPR_SEPARATOR) return expr;
     this->getNewToken();

@@ -17,7 +17,7 @@ private:
 
     Token getNewToken();
     std::unique_ptr<Expression> logError (const std::string& msg);
-    std::unique_ptr<Expression> parseLiteralExpr();
+    std::unique_ptr<Expression> parsePrimary();
     std::unique_ptr<Expression> parseNumExpr();
     std::unique_ptr<Expression> parseIdExpr();
     std::unique_ptr<Expression> parseParenthesisExpr();
