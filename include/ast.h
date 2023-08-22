@@ -30,6 +30,19 @@ inline Operation resolveOperation(TokenType token_type) {
     }
 }
 
+inline std::string operationToString(Operation operation) {
+    switch (operation) {
+        case OP_ADDITION:
+            return "+";
+        case OP_SUBTRACTION:
+            return "-";
+        case OP_ASSIGNMENT:
+            return "=";
+        case OP_INVALID:
+            return "op_invalid";
+    }
+}
+
 enum ExprType {
     EXPR_NUM,
     EXPR_ID,
@@ -79,7 +92,9 @@ public:
     ExprType getType() { return EXPR_BINARY; }
 
     std::string toString() {
-        return "(" + this->lhs->toString() + "op(" + std::to_string(this->operation) + ")" + this->rhs->toString();
+        return "(" + this->lhs->toString()
+            + " " + operationToString(this->operation) + " "
+            + this->rhs->toString() + ")";
     }
 };
 
