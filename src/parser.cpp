@@ -13,10 +13,10 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
 std::unique_ptr<Expression> Parser::parseExpr() {
     this->getNewToken();
 
-    return this->subParseExpr();
+    return this->parseSubExpr();
 }
 
-std::unique_ptr<Expression> Parser::subParseExpr() {
+std::unique_ptr<Expression> Parser::parseSubExpr() {
     std::unique_ptr<Expression> lhs = this->parsePrimaryExpr();
     if (!lhs)
         return nullptr;
@@ -27,7 +27,7 @@ std::unique_ptr<Expression> Parser::subParseExpr() {
 std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
     this->getNewToken(); // Consume '('
 
-    std::unique_ptr<Expression> expr = this->parseExpr();
+    std::unique_ptr<Expression> expr = this->parseSubExpr();
     if (!expr)
         return nullptr;
 
@@ -72,6 +72,9 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 
 std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(std::unique_ptr<Expression> lhs) {
     while (true) {
+        if (this->current_token.getType() == TOK_SEPARATOR)
+            return std::move(lhs);
+
         Operation operation = resolveOperation(this->current_token.getType());
 
         if (operation == OP_INVALID)
