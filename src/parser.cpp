@@ -21,6 +21,7 @@ std::unique_ptr<Expression> Parser::parseExpr() {
 
 std::unique_ptr<Expression> Parser::parseSubExpr() {
     std::unique_ptr<Expression> lhs = this->parsePrimaryExpr();
+
     if (!lhs)
         return nullptr;
 
@@ -79,8 +80,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
 
 std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(std::unique_ptr<Expression> lhs) {
     while (true) {
-
-        if (this->current_token.getType() == TOK_SEPARATOR 
+        if (this->current_token.getType() == TOK_SEPARATOR
         || this->current_token.getType() == TOK_PARENTHESIS_CLOSE)
             return std::move(lhs);
 
