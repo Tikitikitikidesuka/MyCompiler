@@ -38,7 +38,7 @@ inline std::string operationToString(Operation operation) {
             return "-";
         case OP_ASSIGNMENT:
             return "=";
-        case OP_INVALID:
+        default:
             return "op_invalid";
     }
 }
