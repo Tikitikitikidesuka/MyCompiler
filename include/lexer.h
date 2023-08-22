@@ -11,6 +11,8 @@ enum TokenType {
     TOK_ASSIGN,
     TOK_PLUS,
     TOK_MINUS,
+    TOK_DIVIDE,
+    TOK_MULTIPLY,
     TOK_PARENTHESIS_OPEN,
     TOK_PARENTHESIS_CLOSE,
     TOK_SEPARATOR,
@@ -24,6 +26,8 @@ enum TokenType {
 inline TokenType resolveReservedWord(const std::string& str) {
     if (str == "+") return TOK_PLUS;
     if (str == "-") return TOK_MINUS;
+    if (str == "*") return TOK_MULTIPLY;
+    if (str == "/") return TOK_DIVIDE;
     if (str == "=") return TOK_ASSIGN;
     if (str == "(") return TOK_PARENTHESIS_OPEN;
     if (str == ")") return TOK_PARENTHESIS_CLOSE;

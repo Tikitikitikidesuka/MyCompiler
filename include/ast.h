@@ -13,6 +13,8 @@ enum Operation {
     OP_ADDITION,
     OP_SUBTRACTION,
     OP_ASSIGNMENT,
+    OP_PRODUCT,
+    OP_DIVISION,
 
     OP_INVALID,
 };
@@ -25,6 +27,10 @@ inline Operation resolveOperation(TokenType token_type) {
             return OP_ADDITION;
         case TOK_MINUS:
             return OP_SUBTRACTION;
+        case TOK_DIVIDE:
+            return OP_DIVISION;
+        case TOK_MULTIPLY:
+            return OP_PRODUCT;
         default:
             return OP_INVALID;
     }
@@ -36,6 +42,10 @@ inline std::string operationToString(Operation operation) {
             return "+";
         case OP_SUBTRACTION:
             return "-";
+        case OP_PRODUCT:
+            return "*";
+        case OP_DIVISION:
+            return "/";
         case OP_ASSIGNMENT:
             return "=";
         default:
@@ -49,6 +59,10 @@ inline int operationPriority(Operation operation) {
             return 20;
         case OP_SUBTRACTION:
             return 20;
+        case OP_PRODUCT:
+            return 40;
+        case OP_DIVISION:
+            return 40;
         case OP_ASSIGNMENT:
             return 0;
         default:
