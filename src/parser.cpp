@@ -25,7 +25,7 @@ std::unique_ptr<Expression> Parser::parseSubExpr() {
     if (!lhs)
         return nullptr;
 
-    return this->parseBinaryRhsExpr(std::move(lhs));
+    return this->parseBinaryRhsExpr(0, std::move(lhs));
 }
 
 std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
@@ -78,7 +78,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
     return std::move(expr);
 }
 
-std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(std::unique_ptr<Expression> lhs) {
+std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_expr_priority,std::unique_ptr<Expression> lhs) {
     while (true) {
         if (this->current_token.getType() == TOK_SEPARATOR
         || this->current_token.getType() == TOK_PARENTHESIS_CLOSE)
@@ -89,11 +89,23 @@ std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(std::unique_ptr<Expressio
         if (operation == OP_INVALID)
             return this->logError("Invalid operator");
 
+        int curr_priority = operationPriority(operation);
+        if (curr_priority < prev_expr_priority)
+            return lhs;
+
         this->getNewToken(); // Consume operator
 
         std::unique_ptr<Expression> rhs = this->parsePrimaryExpr();
         if (!rhs)
             return nullptr;
+
+        Operation next_operation = resolveOperation(this->current_token.getType());
+        int next_priority = operationPriority(next_operation);
+        if (next_priority > curr_priority) {
+            rhs = parseBinaryRhsExpr(curr_priority + 1, std::move(rhs));
+            if (!rhs) 
+                return nullptr;
+        }
 
         lhs = std::make_unique<BinaryExpression>(operation, std::move(lhs), std::move(rhs));
     }

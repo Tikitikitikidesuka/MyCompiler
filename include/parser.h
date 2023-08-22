@@ -22,7 +22,7 @@ private:
     std::unique_ptr<Expression> parseNumExpr();
     std::unique_ptr<Expression> parseIdExpr();
     std::unique_ptr<Expression> parseParenthesisExpr();
-    std::unique_ptr<Expression> parseBinaryRhsExpr(std::unique_ptr<Expression> lhs);
+    std::unique_ptr<Expression> parseBinaryRhsExpr(int op_priority, std::unique_ptr<Expression> lhs);
 
 public:
     Parser() : current_token(Token(TOK_INVALID, "")) {}
