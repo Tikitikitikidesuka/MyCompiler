@@ -43,6 +43,19 @@ inline std::string operationToString(Operation operation) {
     }
 }
 
+inline int operationPriority(Operation operation) {
+    switch  (operation) {
+        case OP_ADDITION:
+            return 20;
+        case OP_SUBTRACTION:
+            return 20;
+        case OP_ASSIGNMENT:
+            return 0;
+        default:
+            return -1;
+    }
+}
+
 enum ExprType {
     EXPR_NUM,
     EXPR_ID,
