@@ -9,11 +9,26 @@
 #include "lexer.h"
 
 // MISCELLANEOUS
-enum Operator {
+enum Operation {
     OP_ADDITION,
     OP_SUBTRACTION,
     OP_ASSIGNMENT,
+
+    OP_INVALID,
 };
+
+inline Operation resolveOperation(TokenType token_type) {
+    switch (token_type) {
+        case TOK_ASSIGN:
+            return OP_ASSIGNMENT;
+        case TOK_PLUS:
+            return OP_ADDITION;
+        case TOK_MINUS:
+            return OP_SUBTRACTION;
+        default:
+            return OP_INVALID;
+    }
+}
 
 enum ExprType {
     EXPR_SEPARATOR,
@@ -74,9 +89,9 @@ public:
 class BinaryExpression : public Expression {
 private:
     std::unique_ptr<Expression> lhs, rhs;
-    Operator operation;
+    Operation operation;
 public:
-    BinaryExpression(Operator operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs) 
+    BinaryExpression(Operation operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs)
     : operation(operation), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
     ExprType getType() { return EXPR_BINARY; }
 

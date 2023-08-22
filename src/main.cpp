@@ -5,10 +5,13 @@
 int main() {
     Parser parser;
 
+    /*
     std::cout << BinaryExpression(
-            Operator::OP_ASSIGNMENT,
+            Operation::OP_ASSIGNMENT,
             std::make_unique<IdExpression>(IdExpression("a")),
             std::make_unique<NumberExpression>(NumberExpression(3))).toString() << "\n";
+            */
+
     std::unique_ptr<Expression> a;
     do {
         a = parser.parseExpr();

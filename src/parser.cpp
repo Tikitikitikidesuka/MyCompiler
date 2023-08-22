@@ -11,31 +11,35 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
 }
 
 std::unique_ptr<Expression> Parser::parseExpr() {
-    if (this-> getNewToken().getType() == TOK_EOF) {
-        std::cout << "FIN\n";
-        return nullptr;
-    }
-    /*if (this->getNewToken().getType() == TOK_PARENTHESIS_OPEN) {
-        return this->parseParenthesisExpr();
+    this->getNewToken();
 
-    } else if (this->current_token.getType() == TOK_SEPARATOR) {
-        return std::make_unique<SeparatorExpression>(SeparatorExpression());
-    
-    }*/ else {
-        return this->parseBinaryExpr();
-    }
+    return this->subParseExpr();
+}
+
+std::unique_ptr<Expression> Parser::subParseExpr() {
+    std::unique_ptr<Expression> lhs = this->parsePrimaryExpr();
+    if (!lhs)
+        return nullptr;
+
+    return this->parseBinaryRhsExpr(std::move(lhs));
 }
 
 std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
-    std::unique_ptr<Expression> expr = this->parseExpr();
+    this->getNewToken(); // Consume '('
 
-    if (expr && this->current_token.getType() == TOK_PARENTHESIS_CLOSE) {
-        return std::make_unique<ParenthesisExpression>(ParenthesisExpression(std::move(expr)));
-    } else {
+    std::unique_ptr<Expression> expr = this->parseExpr();
+    if (!expr)
         return nullptr;
-    }
+
+    if (this->current_token.getType() != TOK_PARENTHESIS_CLOSE)
+        return this->logError("Expected )");
+
+    this->getNewToken(); // Consume ')'
+
+    return expr;
 }
-std::unique_ptr<Expression> Parser::parsePrimary() {
+
+std::unique_ptr<Expression> Parser::parsePrimaryExpr() {
     switch (this->current_token.getType()) {
         case TOK_NUM:
             return this->parseNumExpr();
@@ -49,57 +53,36 @@ std::unique_ptr<Expression> Parser::parsePrimary() {
 }
 
 std::unique_ptr<Expression> Parser::parseNumExpr() {
-    return std::make_unique<NumberExpression>(NumberExpression(stoi(this->current_token.getLexeme())));
-}
+    std::unique_ptr<Expression> expr = std::make_unique<NumberExpression>(
+            NumberExpression(stoi(this->current_token.getLexeme())));
 
-std::unique_ptr<Expression> Parser::parseIdExpr() {
-    return std::make_unique<IdExpression>(IdExpression(this->current_token.getLexeme()));
-}
-
-std::unique_ptr<Expression> Parser::parseBinaryExpr() {
-    auto expr = this->parsePrimary();
-    if (expr == nullptr) return logError("Must be a literal\n");
-    if (expr->getType() == EXPR_SEPARATOR) return expr;
     this->getNewToken();
-
-    if (this->current_token.getType() == TOK_PLUS || this->current_token.getType() == TOK_MINUS) {
-        return this->parseOperationExpr(std::move(expr));
-    }
-    
-    if (this->current_token.getType() == TOK_ASSIGN) {
-        return this->parseAssignmentExpr(std::move(expr));
-    }
 
     return std::move(expr);
 }
 
-std::unique_ptr<Expression> Parser::parseOperationExpr(std::unique_ptr<Expression> lhs) {
-    TokenType operation = this->current_token.getType();
-    auto rhs = parseExpr();
-    if (rhs == nullptr) return logError("Binary Expression incomplete");
-    switch (operation) {
-    case TOK_PLUS:
-        return std::make_unique<BinaryExpression>(BinaryExpression(OP_ADDITION, std::move(lhs), std::move(rhs)));
-    case TOK_MINUS:
-        return std::make_unique<BinaryExpression>(BinaryExpression(OP_SUBTRACTION, std::move(lhs), std::move(rhs)));
+std::unique_ptr<Expression> Parser::parseIdExpr() {
+    std::unique_ptr<Expression> expr = std::make_unique<IdExpression>(
+            IdExpression(this->current_token.getLexeme()));
 
-    default:
-        return logError("Unexpected operation");
-        
-    }
-    
+    this->getNewToken();
+
+    return std::move(expr);
 }
 
-std::unique_ptr<Expression> Parser::parseAssignmentExpr(std::unique_ptr<Expression> lhs) {
-    if (lhs->getType() != EXPR_ID)
-        return this->logError("Assignment may only have and identifier as its lhs.");
+std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(std::unique_ptr<Expression> lhs) {
+    while (true) {
+        Operation operation = resolveOperation(this->current_token.getType());
 
-    auto rhs = this->parseExpr();
+        if (operation == OP_INVALID)
+            return this->logError("Invalid operator");
 
-    if (rhs) {
-        return std::make_unique<BinaryExpression>(BinaryExpression(
-                Operator::OP_ASSIGNMENT, std::move(lhs), std::move(rhs)));
-    } else {
-        return logError("Expression incomplete");
+        this->getNewToken(); // Consume operator
+
+        std::unique_ptr<Expression> rhs = this->parsePrimaryExpr();
+        if (!rhs)
+            return nullptr;
+
+        lhs = std::make_unique<BinaryExpression>(operation, std::move(lhs), std::move(rhs));
     }
 }
