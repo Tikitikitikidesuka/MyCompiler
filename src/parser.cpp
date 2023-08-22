@@ -13,9 +13,8 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
 std::unique_ptr<Expression> Parser::parseExpr() {
     this->getNewToken();
     
-    if (this->current_token.getType() == TOK_EOF) {
+    if (this->current_token.getType() == TOK_EOF)
         return nullptr;
-    }
 
     return this->parseSubExpr();
 }
@@ -53,6 +52,8 @@ std::unique_ptr<Expression> Parser::parsePrimaryExpr() {
             return this->parseIdExpr();
         case TOK_PARENTHESIS_OPEN:
             return this->parseParenthesisExpr();
+        case TOK_EOF:
+            return this->logError("Unexpected end of file");
         default:
             return this->logError("Unexpected Token: " + this->current_token.getLexeme());
     }
