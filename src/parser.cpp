@@ -10,16 +10,16 @@ std::unique_ptr<Expression> Parser::logError(const std::string& msg) {
     return nullptr;
 }
 
-std::unique_ptr<Expression> Parser::parseExpr() {
+std::unique_ptr<Expression> Parser::parseStatement() {
     this->getNewToken();
     
     if (this->current_token.getType() == TOK_EOF)
         return nullptr;
 
-    return this->parseSubExpr();
+    return this->parseExpr();
 }
 
-std::unique_ptr<Expression> Parser::parseSubExpr() {
+std::unique_ptr<Expression> Parser::parseExpr() {
     std::unique_ptr<Expression> lhs = this->parsePrimaryExpr();
 
     if (!lhs)
@@ -31,7 +31,7 @@ std::unique_ptr<Expression> Parser::parseSubExpr() {
 std::unique_ptr<Expression> Parser::parseParenthesisExpr() {
     this->getNewToken(); // Consume '('
 
-    std::unique_ptr<Expression> expr = this->parseSubExpr();
+    std::unique_ptr<Expression> expr = this->parseExpr();
     if (!expr) {
 
         return nullptr;

@@ -17,7 +17,7 @@ private:
 
     Token getNewToken();
     std::unique_ptr<Expression> logError (const std::string& msg);
-    std::unique_ptr<Expression> parseSubExpr();
+    std::unique_ptr<Expression> parseExpr();
     std::unique_ptr<Expression> parsePrimaryExpr();
     std::unique_ptr<Expression> parseNumExpr();
     std::unique_ptr<Expression> parseIdExpr();
@@ -26,7 +26,7 @@ private:
 
 public:
     Parser() : current_token(Token(TOK_INVALID, "")) {}
-    std::unique_ptr<Expression> parseExpr();
+    std::unique_ptr<Expression> parseStatement();
 };
 
 

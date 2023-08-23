@@ -8,7 +8,6 @@
 
 #include "lexer.h"
 
-// MISCELLANEOUS
 enum Operation {
     OP_ADDITION,
     OP_SUBTRACTION,
