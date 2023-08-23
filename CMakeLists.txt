@@ -32,6 +32,7 @@ add_executable(${CMAKE_PROJECT_NAME} ${SRC_FILES} ${MAIN_SOURCE_FILE})
 # Add LLVM
 
 find_package(LLVM REQUIRED CONFIG)
+find_package(ZLIB REQUIRED)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
@@ -42,7 +43,7 @@ add_definitions(${LLVM_DEFINITIONS_LIST})
 
 llvm_map_components_to_libnames(llvm_libs support core irreader)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} ${llvm_libs})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${llvm_libs} ZLIB::ZLIB)
 
 # ------------------------------------------------- #
 
