@@ -7,7 +7,7 @@ int main() {
 
     std::unique_ptr<Expression> a;
     do {
-        a = parser.parseExpr();
+        a = parser.parseStatement();
         if (a != nullptr) std::cout << a->toString() << "\n";
         else std::cout << "nullptr\n";
     } while (a != nullptr);
