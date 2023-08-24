@@ -89,7 +89,7 @@ std::unique_ptr<Expression> Parser::parseIdExpr() {
     return std::move(expr);
 }
 
-std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_expr_priority,std::unique_ptr<Expression> lhs) {
+std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_priority,std::unique_ptr<Expression> lhs) {
     while (true) {
         if (this->current_token.getType() == TOK_SEPARATOR
         || this->current_token.getType() == TOK_PARENTHESIS_CLOSE)
@@ -101,8 +101,8 @@ std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_expr_priority,st
             return this->logError("Invalid operator");
 
         int curr_priority = operationPriority(operation);
-        if (curr_priority < prev_expr_priority)
-            return lhs;
+        if (curr_priority < prev_priority)
+            return std::move(lhs);
 
         this->getNewToken(); // Consume operator
 
@@ -111,15 +111,20 @@ std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_expr_priority,st
             return nullptr;
 
         Operation next_operation = resolveOperation(this->current_token.getType());
+
         int next_priority = operationPriority(next_operation);
         if (next_priority > curr_priority) {
             rhs = parseBinaryRhsExpr(curr_priority + 1, std::move(rhs));
-            if (!rhs) 
+            if (!rhs)
                 return nullptr;
         }
 
-        if (operation == OP_ASSIGNMENT && lhs->getType() != EXPR_VARDECLARE) {
-            if (lhs->getType() == EXPR_VAR) {
+        if (operation == OP_ASSIGNMENT) {
+            if (lhs->getType() == EXPR_VARDECLARE) {
+                rhs = this->parseBinaryRhsExpr(curr_priority, std::move(rhs));
+                if (!rhs)
+                    return nullptr;
+            } else if (lhs->getType() == EXPR_VAR) {
                 return this->logError("Cannot reassign to a variable");
             } else {
                 return this->logError("Left hand side operator must be a variable declaration");
