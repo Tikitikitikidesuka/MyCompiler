@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <set>
 
 #include "lexer.h"
 #include "ast.h"
@@ -14,6 +15,7 @@ class Parser {
 private:
     Lexer lexer;
     Token current_token;
+    std::set<std::string> var_names;
 
     Token getNewToken();
     std::unique_ptr<Expression> logError (const std::string& msg);

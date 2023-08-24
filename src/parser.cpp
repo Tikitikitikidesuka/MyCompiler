@@ -70,8 +70,19 @@ std::unique_ptr<Expression> Parser::parseNumExpr() {
 }
 
 std::unique_ptr<Expression> Parser::parseIdExpr() {
-    std::unique_ptr<Expression> expr = std::make_unique<VariableExpression>(
-            VariableExpression(this->current_token.getLexeme()));
+    std::string var_name = this->current_token.getLexeme();
+
+    std::unique_ptr<Expression> expr;
+
+    if (this->var_names.count(var_name)) { // Var exists
+        expr = std::make_unique<VariableExpression>(
+                VariableExpression(var_name));
+    } else { // Var does not exist
+        expr = std::make_unique<VariableDeclarationExpression>(
+                VariableDeclarationExpression(var_name));
+
+        this->var_names.insert(var_name);
+    }
 
     this->getNewToken();
 
@@ -105,6 +116,14 @@ std::unique_ptr<Expression> Parser::parseBinaryRhsExpr(int prev_expr_priority,st
             rhs = parseBinaryRhsExpr(curr_priority + 1, std::move(rhs));
             if (!rhs) 
                 return nullptr;
+        }
+
+        if (operation == OP_ASSIGNMENT && lhs->getType() != EXPR_VARDECLARE) {
+            if (lhs->getType() == EXPR_VAR) {
+                return this->logError("Cannot reassign to a variable");
+            } else {
+                return this->logError("Left hand side operator must be a variable declaration");
+            }
         }
 
         lhs = std::make_unique<BinaryExpression>(operation, std::move(lhs), std::move(rhs));
