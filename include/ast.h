@@ -1,18 +1,6 @@
 #ifndef AST_H
 #define AST_H
 
-#include <llvm/ADT/APFloat.h>
-#include <llvm/ADT/STLExtras.h>
-#include <llvm/IR/BasicBlock.h>
-#include <llvm/IR/Constants.h>
-#include <llvm/IR/DerivedTypes.h>
-#include <llvm/IR/Function.h>
-#include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/Module.h>
-#include <llvm/IR/Type.h>
-#include <llvm/IR/Verifier.h>
-
 #include <string>
 #include <memory>
 #include <sstream>
@@ -87,12 +75,25 @@ enum ExprType {
     EXPR_BINARY
 };
 
+class VariableExpression;
+class VariableDeclarationExpression;
+class NumberExpression;
+class BinaryExpression;
+
+class ExpressionVisitor {
+public:
+    virtual void visit(VariableExpression* expr) = 0;
+    virtual void visit(VariableDeclarationExpression* expr) = 0;
+    virtual void visit(NumberExpression* expr) = 0;
+    virtual void visit(BinaryExpression* expr) = 0;
+};
+
 class Expression {
 public:
     virtual ~Expression() = default;
     virtual ExprType getType() = 0;
     virtual std::string toString() = 0;
-    virtual llvm::Value* codegen(std::unique_ptr<llvm::LLVMContext> context) = 0;
+    virtual void accept(ExpressionVisitor& visitor) = 0;
 };
 
 class VariableExpression : public Expression {
@@ -102,8 +103,9 @@ public:
     VariableExpression(const std::string& name)
     : name(name) {}
     ExprType getType() { return EXPR_VAR; }
+    std::string getName() { return this->name; }
 
-    llvm::Value* codegen(std::unique_ptr<llvm::LLVMContext> context) override;
+    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return this->name;
@@ -117,11 +119,12 @@ public:
     VariableDeclarationExpression(const std::string& name)
     : name(name) {}
     ExprType getType() { return EXPR_VARDECLARE; }
+    std::string getName() { return this->name; }
 
-    llvm::Value* codegen(std::unique_ptr<llvm::LLVMContext> context) override;
-    
+    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+
     std::string toString() {
-        return this->name;
+        return "new(" + this->name + ")";
     }
 };
 
@@ -132,9 +135,10 @@ public:
     NumberExpression(int32_t value)
     : value(value) {}
     ExprType getType() { return EXPR_NUM; }
+    int32_t getValue() { return this->value; }
 
-    llvm::Value* codegen(std::unique_ptr<llvm::LLVMContext> context) override;
-    
+    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+
     std::string toString() {
         return std::to_string(this->value);
     }
@@ -148,6 +152,8 @@ public:
     BinaryExpression(Operation operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs)
     : operation(operation), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
     ExprType getType() { return EXPR_BINARY; }
+
+    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return "(" + this->lhs->toString()
