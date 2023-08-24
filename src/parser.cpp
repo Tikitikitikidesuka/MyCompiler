@@ -70,8 +70,8 @@ std::unique_ptr<Expression> Parser::parseNumExpr() {
 }
 
 std::unique_ptr<Expression> Parser::parseIdExpr() {
-    std::unique_ptr<Expression> expr = std::make_unique<IdExpression>(
-            IdExpression(this->current_token.getLexeme()));
+    std::unique_ptr<Expression> expr = std::make_unique<VariableExpression>(
+            VariableExpression(this->current_token.getLexeme()));
 
     this->getNewToken();
 
