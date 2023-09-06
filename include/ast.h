@@ -82,10 +82,10 @@ class BinaryExpression;
 
 class ExpressionVisitor {
 public:
-    virtual void visit(VariableExpression* expr) = 0;
-    virtual void visit(VariableDeclarationExpression* expr) = 0;
-    virtual void visit(NumberExpression* expr) = 0;
-    virtual void visit(BinaryExpression* expr) = 0;
+    virtual void* visit(VariableExpression* expr) = 0;
+    virtual void* visit(VariableDeclarationExpression* expr) = 0;
+    virtual void* visit(NumberExpression* expr) = 0;
+    virtual void* visit(BinaryExpression* expr) = 0;
 };
 
 class Expression {
@@ -93,7 +93,7 @@ public:
     virtual ~Expression() = default;
     virtual ExprType getType() = 0;
     virtual std::string toString() = 0;
-    virtual void accept(ExpressionVisitor& visitor) = 0;
+    virtual void* accept(ExpressionVisitor& visitor) = 0;
 };
 
 class VariableExpression : public Expression {
@@ -105,7 +105,7 @@ public:
     ExprType getType() { return EXPR_VAR; }
     std::string getName() { return this->name; }
 
-    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+    void* accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return this->name;
@@ -121,7 +121,7 @@ public:
     ExprType getType() { return EXPR_VARDECLARE; }
     std::string getName() { return this->name; }
 
-    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+    void* accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return "new(" + this->name + ")";
@@ -137,7 +137,7 @@ public:
     ExprType getType() { return EXPR_NUM; }
     int32_t getValue() { return this->value; }
 
-    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+    void* accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return std::to_string(this->value);
@@ -152,8 +152,11 @@ public:
     BinaryExpression(Operation operation, std::unique_ptr<Expression> lhs, std::unique_ptr<Expression> rhs)
     : operation(operation), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
     ExprType getType() { return EXPR_BINARY; }
+    Operation getOperation() { return this->operation; }
+    Expression* getLhs() { return this->lhs.get(); }
+    Expression* getRhs() { return this->rhs.get(); }
 
-    void accept(ExpressionVisitor& visitor) { visitor.visit(this); };
+    void* accept(ExpressionVisitor& visitor) { visitor.visit(this); };
 
     std::string toString() {
         return "(" + this->lhs->toString()

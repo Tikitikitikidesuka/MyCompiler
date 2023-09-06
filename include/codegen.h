@@ -20,16 +20,18 @@
 
 class CodeGenerator : public ExpressionVisitor {
 private:
+    llvm::IRBuilder<> builder;
     std::unique_ptr<llvm::LLVMContext> context;
-    std::map<std::string, llvm::Value*> named_values;
+    std::map<std::string, llvm::AllocaInst*> named_values;
 
 public:
+    CodeGenerator() : builder(*context) {}
     llvm::Value* logError(const std::string& msg);
 
-    void visit(VariableExpression* expr) override;
-    void visit(VariableDeclarationExpression* expr) override;
-    void visit(NumberExpression* expr) override;
-    void visit(BinaryExpression* expr) override;
+    void* visit(VariableExpression* expr) override;
+    void* visit(VariableDeclarationExpression* expr) override;
+    void* visit(NumberExpression* expr) override;
+    void* visit(BinaryExpression* expr) override;
 };
 
 
